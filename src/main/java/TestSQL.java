@@ -9,23 +9,6 @@ public class TestSQL {
     private static final String USER = "root";
     private static final String PASSWORD = "12345678";
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println(ColorUtils.applyColor(ColorUtils.MAGENTA, ColorUtils.BOLD +
-                            "Enter the ingredients you have (comma separated): "));
-        String input = scanner.nextLine();
-        List<String> userIngredients = Arrays.asList(input.split(","));
-
-        // Normalize the user's ingredients
-        List<String> normalizedUserIngredients = new ArrayList<>();
-        for (String ingredient : userIngredients) {
-            normalizedUserIngredients.add(normalizeIngredient(ingredient.trim()));
-        }
-
-        // Query the database for recipes that match
-        searchRecipes(normalizedUserIngredients, scanner);
-    }
 
     public static void searchRecipes(List<String> userIngredients, Scanner scanner) {
         if (userIngredients.isEmpty()) {
@@ -38,7 +21,6 @@ public class TestSQL {
         List<Integer> recipeIds = new ArrayList<>();
 
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASSWORD)) {
-            // Build a SQL query dynamically
             StringBuilder query = new StringBuilder("SELECT id, Title, Ingredients, Instructions FROM recipes WHERE ");
             List<String> conditions = new ArrayList<>();
             for (String ingredient : userIngredients) {
@@ -53,22 +35,17 @@ public class TestSQL {
 
                 ResultSet rs = stmt.executeQuery();
 
-                // Collect titles and IDs of matching recipes
                 while (rs.next()) {
                     int id = rs.getInt("id");
                     String title = rs.getString("Title");
                     String ingredients = rs.getString("Ingredients");
                     String instructions = rs.getString("Instructions");
 
-                    // Parse and normalize ingredients
-                    List<String> recipeIngredients = parseIngredients(ingredients);
-                    List<String> normalizedRecipeIngredients = new ArrayList<>();
-                    for (String ingredient : recipeIngredients) {
-                        normalizedRecipeIngredients.add(normalizeIngredient(ingredient));
-                    }
+                    // Normalize and parse ingredients from the database
+                    String normalizedIngredientsFromDb = normalizeIngredient(ingredients.trim());
 
                     long matchCount = userIngredients.stream()
-                            .filter(normalizedRecipeIngredients::contains)
+                            .filter(normalizedIngredientsFromDb::contains)  // Compare with normalized DB ingredients
                             .count();
 
                     if (matchCount >= 1) {
@@ -107,19 +84,23 @@ public class TestSQL {
                             // Handle the case where the user doesn't input an integer
                             System.out.println(ColorUtils.applyColor(ColorUtils.RED, ColorUtils.BOLD +
                                     "Invalid input. Please enter a valid recipe ID."));
-                            scanner.next(); // Consume the invalid input
+                            scanner.next();
                         }
                     }
 
                 } else {
                     System.out.println(ColorUtils.applyColor(ColorUtils.RED, ColorUtils.BOLD +
-                            "No matching recipes found."));
+                            "No matching recipes found. Asking Ollama for your request...\n"));
+
+                    String response = OllamaConversation.chat(DBhelperReq.request(String.valueOf(userIngredients)));
+                    System.out.println(response);
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
 
 
     private static void displayRecipeDetails(int recipeId, Connection conn) {
@@ -131,13 +112,16 @@ public class TestSQL {
                 String title = rs.getString("Title");
                 String ingredients = rs.getString("Ingredients");
                 String instructions = rs.getString("Instructions");
+
+                // remove brackets from ingredients string
+                String ingredientsFormatted = parseIngredients(ingredients);
+
                 System.out.print(ColorUtils.applyColor(ColorUtils.YELLOW, ColorUtils.BOLD + "\n🍽️ Recipe: "));
                 System.out.println(title);
                 System.out.print(ColorUtils.applyColor(ColorUtils.YELLOW, ColorUtils.BOLD + "🥗 Ingredients: "));
-                System.out.println(ingredients);
+                System.out.println(ingredientsFormatted);
                 System.out.print(ColorUtils.applyColor(ColorUtils.YELLOW, ColorUtils.BOLD + "📝 Instructions: "));
                 System.out.println(instructions);
-
             }
 
         } catch (SQLException e) {
@@ -145,8 +129,7 @@ public class TestSQL {
         }
     }
 
-    // Normalize ingredient by removing quantities and units
-    private static String normalizeIngredient(String ingredient) {
+    public static String normalizeIngredient(String ingredient) {
         return ingredient.replaceAll(
                         "(?i)" +
                                 "\\s*\\([^)]*\\)" +
@@ -163,16 +146,19 @@ public class TestSQL {
                 .toLowerCase();
     }
 
-    private static List<String> parseIngredients(String ingredients) {
+    private static String parseIngredients(String ingredients) {
         try {
+            // If ingredients are in JSON format, parse them
             JSONArray jsonArray = new JSONArray(ingredients);
-            List<String> ingredientList = new ArrayList<>();
+            StringBuilder ingredientString = new StringBuilder();
             for (int i = 0; i < jsonArray.length(); i++) {
-                ingredientList.add(jsonArray.getString(i));
+                if (i > 0) ingredientString.append(", ");  // Add a comma and space between items
+                ingredientString.append(jsonArray.getString(i));
             }
-            return ingredientList;
+            return ingredientString.toString();
         } catch (JSONException e) {
-            return Arrays.asList(ingredients.replaceAll("[\\[\\]' ]", "").split(","));
+            String cleanIngredients = ingredients.replaceAll("[\\[\\]']", "").replaceAll("\\s*,\\s*", ", ").trim();
+            return cleanIngredients;
         }
     }
 }
