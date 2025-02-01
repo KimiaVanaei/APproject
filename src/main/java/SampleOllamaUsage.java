@@ -35,7 +35,7 @@ public class SampleOllamaUsage {
         }
     }
 
-    // Method to calculate the inner product of two vectors
+
     private static double innerProduct(double[] v1, double[] v2) {
         if (v1 == null || v2 == null) {
             throw new IllegalArgumentException("One or both vectors are null.");
@@ -44,16 +44,37 @@ public class SampleOllamaUsage {
             throw new IllegalArgumentException("Vectors must be of the same length.");
         }
 
-        double sum = 0.0;
+        // Compute magnitudes of v1 and v2
+        double magnitudeV1 = 0.0;
+        double magnitudeV2 = 0.0;
+
         for (int i = 0; i < v1.length; i++) {
-            sum += v1[i] * v2[i];
+            magnitudeV1 += v1[i] * v1[i];
+            magnitudeV2 += v2[i] * v2[i];
         }
-        return sum;
+        magnitudeV1 = Math.sqrt(magnitudeV1);
+        magnitudeV2 = Math.sqrt(magnitudeV2);
+
+        // Normalize the vectors
+        double[] normalizedV1 = new double[v1.length];
+        double[] normalizedV2 = new double[v2.length];
+        for (int i = 0; i < v1.length; i++) {
+            normalizedV1[i] = v1[i] / magnitudeV1;
+            normalizedV2[i] = v2[i] / magnitudeV2;
+        }
+
+        double dotProduct = 0.0;
+        for (int i = 0; i < normalizedV1.length; i++) {
+            dotProduct += normalizedV1[i] * normalizedV2[i];
+        }
+
+        return dotProduct;  // cosine similarity
     }
+
 
     public static void main(String[] args) {
         try {
-            String question = "Where is the capital of Iran?";
+            String question = "if i give you a pdf file, can u extract info from it?";
             JSONObject data = new JSONObject();
             data.put("model", MODEL);
             data.put("prompt", question);
