@@ -10,7 +10,6 @@ import java.nio.charset.StandardCharsets;
 
 public class MealDB {
 
-    // Generic method to fetch meal data from any URL
     public static String fetchMealData(String urlString) {
         String response = "";
         try {

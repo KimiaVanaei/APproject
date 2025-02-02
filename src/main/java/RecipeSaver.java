@@ -18,11 +18,8 @@ public class RecipeSaver {
 
             writer.write("🥗 Ingredients:\n");
             writer.write("------------------------------------------------------------\n");
+            writer.write( ingredients + "\n");
 
-            String[] ingredientList = ingredients.split(",");
-            for (String ingredient : ingredientList) {
-                writer.write("- " + ingredient.trim() + "\n");
-            }
 
             writer.write("\n📝 Instructions:\n");
             writer.write("------------------------------------------------------------\n");
@@ -34,16 +31,6 @@ public class RecipeSaver {
         } catch (IOException e) {
             System.out.println("Error saving recipe: " + e.getMessage());
         }
-    }
-
-    public static void main(String[] args) {
-        // Example usage
-        String title = "Spaghetti Carbonara";
-        String ingredients = "Spaghetti, Eggs, Parmesan cheese, Pancetta, Garlic, Black pepper";
-        String instructions = "1. Boil the spaghetti.\n2. Cook the pancetta.\n3. Mix eggs and cheese.\n4. Combine and serve.";
-
-        // Save the recipe to the file
-        saveRecipe(title, ingredients, instructions);
     }
 
 }

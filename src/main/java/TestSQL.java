@@ -10,15 +10,16 @@ public class TestSQL {
     private static final String PASSWORD = "12345678";
 
 
-    public static void searchRecipes(List<String> userIngredients, Scanner scanner) {
+    public static RecipeDetails searchRecipes(List<String> userIngredients, Scanner scanner) {
         if (userIngredients.isEmpty()) {
             System.out.println(ColorUtils.applyColor(ColorUtils.RED, ColorUtils.BOLD +
                     "No ingredients provided."));
-            return;
+            return null;
         }
 
         List<String> matchingRecipes = new ArrayList<>();
         List<Integer> recipeIds = new ArrayList<>();
+        RecipeDetails selectedRecipe = null;
 
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASSWORD)) {
             StringBuilder query = new StringBuilder("SELECT id, Title, Ingredients, Instructions FROM recipes WHERE ");
@@ -45,7 +46,7 @@ public class TestSQL {
                     String normalizedIngredientsFromDb = normalizeIngredient(ingredients.trim());
 
                     long matchCount = userIngredients.stream()
-                            .filter(normalizedIngredientsFromDb::contains)  // Compare with normalized DB ingredients
+                            .filter(normalizedIngredientsFromDb::contains)
                             .count();
 
                     if (matchCount >= 1) {
@@ -72,16 +73,16 @@ public class TestSQL {
 
                         if (scanner.hasNextInt()) {
                             choice = scanner.nextInt();
+                            scanner.nextLine(); // Consume the newline
 
                             if (recipeIds.contains(choice)) {
                                 validId = true;
-                                displayRecipeDetails(choice, conn);
+                                selectedRecipe = displayRecipeDetails(choice, conn);
                             } else {
                                 System.out.println(ColorUtils.applyColor(ColorUtils.RED, ColorUtils.BOLD +
                                         "Invalid ID. Please try again."));
                             }
                         } else {
-                            // Handle the case where the user doesn't input an integer
                             System.out.println(ColorUtils.applyColor(ColorUtils.RED, ColorUtils.BOLD +
                                     "Invalid input. Please enter a valid recipe ID."));
                             scanner.next();
@@ -99,11 +100,11 @@ public class TestSQL {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return selectedRecipe;
     }
 
-
-
-    private static void displayRecipeDetails(int recipeId, Connection conn) {
+    private static RecipeDetails displayRecipeDetails(int recipeId, Connection conn) {
         try (PreparedStatement stmt = conn.prepareStatement("SELECT Title, Ingredients, Instructions FROM recipes WHERE id = ?")) {
             stmt.setInt(1, recipeId);
             ResultSet rs = stmt.executeQuery();
@@ -113,7 +114,7 @@ public class TestSQL {
                 String ingredients = rs.getString("Ingredients");
                 String instructions = rs.getString("Instructions");
 
-                // remove brackets from ingredients string
+                // Remove brackets from ingredients string
                 String ingredientsFormatted = parseIngredients(ingredients);
 
                 System.out.print(ColorUtils.applyColor(ColorUtils.YELLOW, ColorUtils.BOLD + "\n🍽️ Recipe: "));
@@ -122,12 +123,16 @@ public class TestSQL {
                 System.out.println(ingredientsFormatted);
                 System.out.print(ColorUtils.applyColor(ColorUtils.YELLOW, ColorUtils.BOLD + "📝 Instructions: "));
                 System.out.println(instructions);
+
+                return new RecipeDetails(title, ingredientsFormatted, instructions);
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return null;
     }
+
 
     public static String normalizeIngredient(String ingredient) {
         return ingredient.replaceAll(
