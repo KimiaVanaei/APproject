@@ -73,9 +73,8 @@ public class MealDB {
 
         // Return the formatted response
         return String.format(
-                "🍽️ Meal: %s\n📌 Category: %s\n🌍 Cuisine: %s\n\n📝 Instructions:\n%s\n\n🥗 Ingredients:\n%s\n🎥 Watch Recipe: %s\n🖼️ Image: %s",
-                mealName, category, area, instructions, ingredients.toString(), youtubeLink, imageLink
-        );
+                "🍽️ Meal: %s\n📌 Category: %s\n🌍 Cuisine: %s\n🥗 Ingredients:\n%s\n📝 Instructions:\n%s\n🎥 Watch Recipe: %s\n🖼️ Image: %s",
+                mealName, category, area, ingredients, instructions , youtubeLink, imageLink);
     }
 
     // Search meal by name

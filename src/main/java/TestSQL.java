@@ -55,7 +55,6 @@ public class TestSQL {
                     }
                 }
 
-                // If matching recipes are found
                 if (!matchingRecipes.isEmpty()) {
                     System.out.println(ColorUtils.applyColor(ColorUtils.BLUE, ColorUtils.BOLD +
                             "I have found the following recipes:"));
@@ -77,7 +76,7 @@ public class TestSQL {
 
                             if (recipeIds.contains(choice)) {
                                 validId = true;
-                                selectedRecipe = displayRecipeDetails(choice, conn);
+                                selectedRecipe = getRecipeDetails(choice, conn);
                             } else {
                                 System.out.println(ColorUtils.applyColor(ColorUtils.RED, ColorUtils.BOLD +
                                         "Invalid ID. Please try again."));
@@ -92,9 +91,8 @@ public class TestSQL {
                 } else {
                     System.out.println(ColorUtils.applyColor(ColorUtils.RED, ColorUtils.BOLD +
                             "No matching recipes found. Asking Ollama for your request...\n"));
-
-                    String response = OllamaConversation.chat(DBhelperReq.request(String.valueOf(userIngredients)));
-                    System.out.println(response);
+//                    String response = OllamaConversation.chat(DBhelperReq.request(String.valueOf(userIngredients)));
+//                    System.out.println(response);
                 }
             }
         } catch (SQLException e) {
@@ -104,7 +102,7 @@ public class TestSQL {
         return selectedRecipe;
     }
 
-    private static RecipeDetails displayRecipeDetails(int recipeId, Connection conn) {
+    private static RecipeDetails getRecipeDetails(int recipeId, Connection conn) {
         try (PreparedStatement stmt = conn.prepareStatement("SELECT Title, Ingredients, Instructions FROM recipes WHERE id = ?")) {
             stmt.setInt(1, recipeId);
             ResultSet rs = stmt.executeQuery();
@@ -116,13 +114,6 @@ public class TestSQL {
 
                 // Remove brackets from ingredients string
                 String ingredientsFormatted = parseIngredients(ingredients);
-
-                System.out.print(ColorUtils.applyColor(ColorUtils.YELLOW, ColorUtils.BOLD + "\n🍽️ Recipe: "));
-                System.out.println(title);
-                System.out.print(ColorUtils.applyColor(ColorUtils.YELLOW, ColorUtils.BOLD + "🥗 Ingredients: "));
-                System.out.println(ingredientsFormatted);
-                System.out.print(ColorUtils.applyColor(ColorUtils.YELLOW, ColorUtils.BOLD + "📝 Instructions: "));
-                System.out.println(instructions);
 
                 return new RecipeDetails(title, ingredientsFormatted, instructions);
             }
@@ -166,4 +157,5 @@ public class TestSQL {
             return cleanIngredients;
         }
     }
+
 }

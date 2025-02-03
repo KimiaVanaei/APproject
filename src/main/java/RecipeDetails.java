@@ -20,4 +20,5 @@ public class RecipeDetails {
     public String getInstructions() {
         return instructions;
     }
+
 }
