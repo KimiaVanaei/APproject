@@ -14,7 +14,7 @@ public class Neo4jSaver {
 
             writer.write("🍽️ " + recipe.getTitle() + " 🍽️\n\n");
 
-            writer.write("\n📜 Description:\n");
+            writer.write("📜 Description:\n");
             writer.write( recipe.getDescription() + "\n");
 
             writer.write("\n🥗 Ingredients:\n");
