@@ -1,14 +1,29 @@
 import java.util.Scanner;
 
-public class PrintAndSaveNeo extends PrintAndSave {
-    @Override
-    public void exe (String title, String ingredients, String instructions, Scanner scanner) {
+public class PrintAndSaveNeo {
+
+    public void exe(ExtendedRecipeDetails recipe, Scanner scanner) {
         System.out.print(ColorUtils.applyColor(ColorUtils.YELLOW, ColorUtils.BOLD + "\n🍽️ Recipe: "));
-        System.out.println(title);
+        System.out.println(recipe.getTitle());
+
+        System.out.print(ColorUtils.applyColor(ColorUtils.YELLOW, ColorUtils.BOLD + "📜 Description: "));
+        System.out.println(recipe.getDescription());
+
         System.out.print(ColorUtils.applyColor(ColorUtils.YELLOW, ColorUtils.BOLD + "🥗 Ingredients: "));
-        System.out.println(ingredients);
+        System.out.println(recipe.getIngredients());
+
+        System.out.print(ColorUtils.applyColor(ColorUtils.YELLOW, ColorUtils.BOLD + "⏳ Total Time: "));
+        System.out.println(recipe.getTotalTime() + " minutes");
+
+        System.out.print(ColorUtils.applyColor(ColorUtils.YELLOW, ColorUtils.BOLD + "🍵 Prep Time: "));
+        System.out.println(recipe.getMinPrep() + " minutes");
+
+        System.out.print(ColorUtils.applyColor(ColorUtils.YELLOW, ColorUtils.BOLD + "🍴 Servings: "));
+        System.out.println(recipe.getServingsMin() + " - " + recipe.getServingsMax());
+
         System.out.print(ColorUtils.applyColor(ColorUtils.YELLOW, ColorUtils.BOLD + "📝 Instructions: "));
-        System.out.println(instructions);
+        System.out.println(recipe.getInstructions());
+
         while (true) {
             System.out.println();
             System.out.println(ColorUtils.applyColor(ColorUtils.MAGENTA, ColorUtils.BOLD +
@@ -18,7 +33,7 @@ public class PrintAndSaveNeo extends PrintAndSave {
 
             if (saveChoice.equals("yes")) {
                 Neo4jSaver saver = new Neo4jSaver();
-                saver.saveRecipe(title, ingredients, instructions);
+                saver.saveRecipe(recipe);
                 System.out.println(ColorUtils.applyColor(ColorUtils.GREEN, ColorUtils.BOLD +
                         "Recipe saved successfully!"));
                 break;
@@ -29,11 +44,6 @@ public class PrintAndSaveNeo extends PrintAndSave {
                         "Invalid input. Please enter 'yes' or 'no'."));
             }
         }
-    }
-
-    @Override
-    public void exe2(String result, Scanner scanner) {
-
     }
 
 }

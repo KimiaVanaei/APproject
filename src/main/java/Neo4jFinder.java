@@ -41,7 +41,7 @@ public class Neo4jFinder {
             System.out.println(ColorUtils.applyColor(ColorUtils.RED, ColorUtils.BOLD +
                     "No recipes found with the given filters. Asking Ollama for your request...\n"));
             String response = OllamaConversation.chat(Neo4jHelperReq.request(tag, String.valueOf(ingredients)));
-            olSaver.exe2(response, scanner);
+            olSaver.exe(response, scanner);
             return;
         }
 
@@ -72,9 +72,9 @@ public class Neo4jFinder {
             }
         }
 
-        RecipeDetails recipeDetails = neo4j.getRecipeDetails(recipeId);
+        ExtendedRecipeDetails recipeDetails = neo4j.getRecipeDetails(recipeId);
         if (recipeDetails != null) {
-            saver.exe(recipeDetails.getTitle(), recipeDetails.getIngredients(), recipeDetails.getInstructions(), scanner);
+            saver.exe(recipeDetails, scanner);
         }
 
     }

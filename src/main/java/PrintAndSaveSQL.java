@@ -1,8 +1,8 @@
 import java.util.Scanner;
 
-public class PrintAndSaveSQL extends PrintAndSave {
-    @Override
-    public void exe (String title, String ingredients, String instructions, Scanner scanner) {
+public class PrintAndSaveSQL {
+
+    public void exe(String title, String ingredients, String instructions, Scanner scanner) {
         System.out.print(ColorUtils.applyColor(ColorUtils.YELLOW, ColorUtils.BOLD + "\n🍽️ Recipe: "));
         System.out.println(title);
         System.out.print(ColorUtils.applyColor(ColorUtils.YELLOW, ColorUtils.BOLD + "🥗 Ingredients: "));
@@ -29,11 +29,6 @@ public class PrintAndSaveSQL extends PrintAndSave {
                         "Invalid input. Please enter 'yes' or 'no'."));
             }
         }
-    }
-
-    @Override
-    public void exe2(String result, Scanner scanner) {
-
     }
 
 }

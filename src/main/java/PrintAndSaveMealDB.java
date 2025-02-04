@@ -1,14 +1,8 @@
 import java.util.Scanner;
 
-public class PrintAndSaveMealDB extends PrintAndSave {
+public class PrintAndSaveMealDB {
 
-    @Override
-    public void exe (String title, String ingredients, String instructions, Scanner scanner) {
-
-    }
-
-    @Override
-    public void exe2(String result, Scanner scanner) {
+    public void exe(String result, Scanner scanner) {
         System.out.println(result);
         while (true) {
             System.out.println();
@@ -19,7 +13,7 @@ public class PrintAndSaveMealDB extends PrintAndSave {
 
             if (saveChoice.equals("yes")) {
                 MealDBsaver saver = new MealDBsaver();
-                saver.saveMealDBRecipe(result);
+                saver.saveRecipe(result);
                 System.out.println(ColorUtils.applyColor(ColorUtils.GREEN, ColorUtils.BOLD +
                         "Recipe saved successfully!"));
                 break;

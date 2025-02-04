@@ -17,8 +17,8 @@ public class Main {
                 "\nWelcome to your AI Recipe Assistant!"));
         System.out.println(ColorUtils.applyColor(ColorUtils.CYAN, ColorUtils.BOLD +
                 "🎉 I'm here to help you discover delicious meals based on what you have in your kitchen!" +
-                " Whether you're craving comfort food, want something healthy, or need to whip up dinner with whatever’s" +
-                " left in the fridge, I've got you covered 😊 Let’s get cooking! 🍳🍴"));
+                " Whether you're craving comfort food, want something healthy, or need to whip up dinner with whatever" +
+                " is left in the fridge, I've got you covered 😊 Let’s get cooking! 🍳🍴"));
 
 
         while (true) {
@@ -67,7 +67,7 @@ public class Main {
                         sqlSaver.exe(recipe.getTitle(), recipe.getIngredients(), recipe.getInstructions(), scanner);
                     } else {
                         String response = OllamaConversation.chat(DBhelperReq.request(String.valueOf(userIngredients)));
-                        olSaver.exe2(response, scanner);
+                        olSaver.exe(response, scanner);
                     }
                     break;
 

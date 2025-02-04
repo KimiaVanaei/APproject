@@ -21,7 +21,7 @@ public class HandleMealDB {
                     System.out.println(ColorUtils.applyColor(ColorUtils.RED, ColorUtils.BOLD +
                             "No meal found! Asking Ollama for your request..."));
                     String response = OllamaConversation.chat(MealDBreq.requestByName(mealName));
-                    olSaver.exe2(response, scanner);
+                    olSaver.exe(response, scanner);
                     return;
                 }
 
@@ -41,7 +41,7 @@ public class HandleMealDB {
                     System.out.println(ColorUtils.applyColor(ColorUtils.RED, ColorUtils.BOLD +
                             "No meal found! Asking Ollama for your request..."));
                     String response = OllamaConversation.chat(MealDBreq.requestByLetter(firstLetter));
-                    olSaver.exe2(response, scanner);
+                    olSaver.exe(response, scanner);
                     return;
                 }
                 break;
@@ -59,9 +59,9 @@ public class HandleMealDB {
         }
 
         System.out.println(ColorUtils.applyColor(ColorUtils.BLUE, ColorUtils.BOLD +
-                "\n🍽️ Here is your meal suggestion:\n"));
+                "\nHere is your meal suggestion:\n"));
 
-        saver.exe2(result, scanner);
+        saver.exe(result, scanner);
 
     }
 

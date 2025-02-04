@@ -35,12 +35,15 @@ class Neo4jConnector {
         }
     }
 
-    public RecipeDetails getRecipeDetails(int recipeId) {
+    public ExtendedRecipeDetails getRecipeDetails(int recipeId) {
         try (Session session = driver.session()) {
             return session.readTransaction(tx -> {
                 String query = "MATCH (r:Recipe {recipe_id: $recipeId}) " +
                         "OPTIONAL MATCH (r)-[:HAS_INGREDIENT]->(i:Ingredient) " +
                         "RETURN r.recipe_name AS title, r.directions AS instructions, " +
+                        "r.description AS description, r.min_prep AS min_prep, " +
+                        "r.total_time AS total_time, r.servings_min AS servings_min, " +
+                        "r.servings_max AS servings_max, " +
                         "COLLECT(i.ingredient_name) AS ingredients";
 
                 Result result = tx.run(query, parameters("recipeId", recipeId));
@@ -48,13 +51,21 @@ class Neo4jConnector {
                     Record record = result.next();
                     List<String> ingredientsList = record.get("ingredients").asList(Value::asString);
                     String ingredients = String.join(", ", ingredientsList);
-                    return new RecipeDetails(record.get("title").asString(), ingredients, record.get("instructions").asString());
+                    return new ExtendedRecipeDetails(
+                            record.get("title").asString(),
+                            ingredients,
+                            record.get("instructions").asString(),
+                            record.get("description").asString(),
+                            record.get("min_prep").asString(),
+                            record.get("total_time").asInt(),
+                            record.get("servings_min").asString(),
+                            record.get("servings_max").asString()
+                    );
                 }
                 return null;
             });
         }
     }
-
 
     public void close() {
         driver.close();

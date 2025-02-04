@@ -73,7 +73,7 @@ public class MealDB {
 
         // Return the formatted response
         return String.format(
-                "🍽️ Meal: %s\n📌 Category: %s\n🌍 Cuisine: %s\n🥗 Ingredients:\n%s\n📝 Instructions:\n%s\n🎥 Watch Recipe: %s\n🖼️ Image: %s",
+                "🍽️ %s 🍽️\n\n🔗 Category: %s\n\n🌍 Cuisine: %s\n\n🥗 Ingredients:\n%s\n\n📝 Instructions:\n%s\n\n🎥 Watch Recipe: %s\n\n🖼️ Image: %s",
                 mealName, category, area, ingredients, instructions , youtubeLink, imageLink);
     }
 

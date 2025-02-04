@@ -4,29 +4,19 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class OllamaSaver extends RecipeSaver {
+public class OllamaSaver {
+    protected static final String FILE_NAME = "saved_recipes.txt";
 
-    @Override
-    public void saveRecipe(String title, String ingredients, String instructions) {
-
-    }
-
-    @Override
-    public void saveOllamaRecipe(String response) {
+    public void saveRecipe(String response) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME, true))) {
             String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
             writer.write("📌 Ollama Recipe saved on: " + date + "\n\n");
             writer.write(response);
             writer.write("\n\n");
-            writer.write("------------------------------------------------------------\n");
+            writer.write("-------------------------------------------------------------------------------------\n");
         } catch (IOException e) {
             System.out.println("Error saving recipe: " + e.getMessage());
         }
-
-    }
-
-    @Override
-    public void saveMealDBRecipe(String result) {
 
     }
 }

@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class SQLsaver extends RecipeSaver {
+public class SQLsaver {
+    private static final String FILE_NAME = "saved_recipes.txt";
 
-    @Override
     public void saveRecipe(String title, String ingredients, String instructions) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME, true))) {
 
@@ -24,20 +24,11 @@ public class SQLsaver extends RecipeSaver {
             writer.write(instructions + "\n");
 
             writer.write("\n\n");
-            writer.write("------------------------------------------------------------\n");
+            writer.write("-------------------------------------------------------------------------------------\n");
 
         } catch (IOException e) {
             System.out.println("Error saving recipe: " + e.getMessage());
         }
     }
-    
-    @Override
-    public void saveOllamaRecipe(String response) {
 
-    }
-
-    @Override
-    public void saveMealDBRecipe(String result) {
-
-    }
 }
