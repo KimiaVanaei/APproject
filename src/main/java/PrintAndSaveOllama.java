@@ -1,8 +1,15 @@
 import java.util.Scanner;
 
-public class PrintAndSaveOllama {
-    public void exe (String response, Scanner scanner) {
-        System.out.println(response);
+public class PrintAndSaveOllama extends PrintAndSave {
+
+    @Override
+    public void exe (String title, String ingredients, String instructions, Scanner scanner) {
+
+    }
+
+    @Override
+    public void exe2(String result, Scanner scanner) {
+        System.out.println(result);
 
         while (true) {
             System.out.println();
@@ -13,7 +20,7 @@ public class PrintAndSaveOllama {
 
             if (saveChoice.equals("yes")) {
                 OllamaSaver saver = new OllamaSaver();
-                saver.saveOllamaRecipe(response);
+                saver.saveOllamaRecipe(result);
                 System.out.println(ColorUtils.applyColor(ColorUtils.GREEN, ColorUtils.BOLD +
                         "Recipe saved successfully!"));
                 break;

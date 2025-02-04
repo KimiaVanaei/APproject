@@ -1,17 +1,14 @@
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Scanner;
 
 public class HandleMealDB {
 
-    public static void search(Scanner scanner, PrintAndSaveMealDB saver) {
+    public static void search(Scanner scanner, PrintAndSaveMealDB saver, PrintAndSaveOllama olSaver) {
         System.out.println(ColorUtils.applyColor(ColorUtils.MAGENTA, ColorUtils.BOLD +
                 "🔍 Choose a MealDB search method:"));
         System.out.println(ColorUtils.applyColor(ColorUtils.YELLOW, ColorUtils.BOLD +
-                "1️⃣ Search by meal name\n2️⃣ Search by first letter\n3️⃣ Get a random meal"));
+                "1️⃣ Search by meal name\n2️⃣ Search by first letter\n3️⃣ Get a random meal\n"));
 
-        String choice = scanner.nextLine();
+        String choice = scanner.nextLine().trim();
         String result = "";
 
         switch (choice) {
@@ -20,6 +17,14 @@ public class HandleMealDB {
                         "Enter the meal name: "));
                 String mealName = scanner.nextLine().trim();
                 result = MealDB.searchMealByName(mealName);
+                if ("No meal found!".equals(result)) {
+                    System.out.println(ColorUtils.applyColor(ColorUtils.RED, ColorUtils.BOLD +
+                            "No meal found! Asking Ollama for your request..."));
+                    String response = OllamaConversation.chat(MealDBreq.requestByName(mealName));
+                    olSaver.exe2(response, scanner);
+                    return;
+                }
+
                 break;
 
             case "2":
@@ -32,6 +37,13 @@ public class HandleMealDB {
                     return;
                 }
                 result = MealDB.listMealsByFirstLetter(firstLetter);
+                if ("No meal found!".equals(result)) {
+                    System.out.println(ColorUtils.applyColor(ColorUtils.RED, ColorUtils.BOLD +
+                            "No meal found! Asking Ollama for your request..."));
+                    String response = OllamaConversation.chat(MealDBreq.requestByLetter(firstLetter));
+                    olSaver.exe2(response, scanner);
+                    return;
+                }
                 break;
 
             case "3":
@@ -49,7 +61,7 @@ public class HandleMealDB {
         System.out.println(ColorUtils.applyColor(ColorUtils.BLUE, ColorUtils.BOLD +
                 "\n🍽️ Here is your meal suggestion:\n"));
 
-        saver.exe(result, scanner);
+        saver.exe2(result, scanner);
 
     }
 

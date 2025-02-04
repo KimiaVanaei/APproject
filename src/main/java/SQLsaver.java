@@ -30,4 +30,14 @@ public class SQLsaver extends RecipeSaver {
             System.out.println("Error saving recipe: " + e.getMessage());
         }
     }
+    
+    @Override
+    public void saveOllamaRecipe(String response) {
+
+    }
+
+    @Override
+    public void saveMealDBRecipe(String result) {
+
+    }
 }

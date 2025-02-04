@@ -1,9 +1,15 @@
 import java.util.Scanner;
 
-public class PrintAndSaveMealDB {
-    public void exe (String result, Scanner scanner) {
-        System.out.println(result);
+public class PrintAndSaveMealDB extends PrintAndSave {
 
+    @Override
+    public void exe (String title, String ingredients, String instructions, Scanner scanner) {
+
+    }
+
+    @Override
+    public void exe2(String result, Scanner scanner) {
+        System.out.println(result);
         while (true) {
             System.out.println();
             System.out.println(ColorUtils.applyColor(ColorUtils.MAGENTA, ColorUtils.BOLD +
@@ -24,6 +30,6 @@ public class PrintAndSaveMealDB {
                         "Invalid input. Please enter 'yes' or 'no'."));
             }
         }
-
     }
+
 }

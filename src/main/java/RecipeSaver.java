@@ -9,6 +9,7 @@ abstract class RecipeSaver {
     protected static final String FILE_NAME = "saved_recipes.txt";
 
     public abstract void saveRecipe(String title, String ingredients, String instructions);
-
+    public abstract void saveMealDBRecipe(String result);
+    public abstract void saveOllamaRecipe(String response);
 
 }

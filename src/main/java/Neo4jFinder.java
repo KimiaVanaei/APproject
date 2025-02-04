@@ -1,4 +1,3 @@
-import org.neo4j.driver.*;
 import java.util.*;
 
 public class Neo4jFinder {
@@ -42,7 +41,7 @@ public class Neo4jFinder {
             System.out.println(ColorUtils.applyColor(ColorUtils.RED, ColorUtils.BOLD +
                     "No recipes found with the given filters. Asking Ollama for your request...\n"));
             String response = OllamaConversation.chat(Neo4jHelperReq.request(tag, String.valueOf(ingredients)));
-            olSaver.exe(response, scanner);
+            olSaver.exe2(response, scanner);
             return;
         }
 

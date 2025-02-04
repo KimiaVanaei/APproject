@@ -4,9 +4,19 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class MealDBsaver {
-    protected static final String FILE_NAME = "saved_recipes.txt";
+public class MealDBsaver extends RecipeSaver {
 
+    @Override
+    public void saveRecipe(String title, String ingredients, String instructions) {
+
+    }
+
+    @Override
+    public void saveOllamaRecipe(String response) {
+
+    }
+
+    @Override
     public void saveMealDBRecipe(String result) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME, true))) {
             String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());

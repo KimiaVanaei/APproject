@@ -29,7 +29,7 @@ public class Main {
                     " ingredients only.\n3️⃣ Neo4j Database – Search by tag (required) and optionally by ingredients."));
 
             System.out.println("\uD83D\uDCA1 If no results are found using your chosen method, I'll automatically check" +
-                    " with Ollama to find the best match for you.");
+                    " with Ollama to find the best match for you.\n");
 
             String input = scanner.nextLine().trim();
 
@@ -49,7 +49,7 @@ public class Main {
                             "You selected MealDB. Implementing MealDB search..."));
                     System.out.println(ColorUtils.applyColor(ColorUtils.MAGENTA, ColorUtils.BOLD +
                             "\n-------------------------------------------------------------------------"));
-                    HandleMealDB.search(scanner, mealDbSaver);
+                    HandleMealDB.search(scanner, mealDbSaver, olSaver);
                     break;
 
                 case "2":
@@ -67,7 +67,7 @@ public class Main {
                         sqlSaver.exe(recipe.getTitle(), recipe.getIngredients(), recipe.getInstructions(), scanner);
                     } else {
                         String response = OllamaConversation.chat(DBhelperReq.request(String.valueOf(userIngredients)));
-                        olSaver.exe(response, scanner);
+                        olSaver.exe2(response, scanner);
                     }
                     break;
 
